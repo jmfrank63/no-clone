@@ -1,25 +1,25 @@
-struct NonCopyableValue {
+struct NoClone {
     value: i32,
 }
 
-fn process_value(value: NonCopyableValue) -> Option<NonCopyableValue> {
+fn process_value(no_clone: NoClone) -> Option<NoClone> {
     // Processing succeeds if the value is divisible by 5
-    if value.value % 5 == 0 {
+    if no_clone.value % 5 == 0 {
         None  // Success, consume the value
     } else {
-        Some(NonCopyableValue { value: value.value + 1 })  // Failure, increment and return the value for a retry
+        Some(NoClone { value: no_clone.value + 1 })  // Failure, increment and return the value for a retry
     }
 }
 
 fn main() {
-    let mut retry_option: Option<NonCopyableValue> = Some(NonCopyableValue { value: 11 }); // Start with a non-copyable value
+    let mut retry_option: Option<NoClone> = Some(NoClone { value: 11 }); // Start with a non-clonable value
 
-    while let Some(value) = retry_option.take() { // Take the value out of the option
-        println!("Processing value: {}", value.value);
-        retry_option = process_value(value); // Process and potentially get a new option
+    while let Some(no_clone) = retry_option.take() { // Take the value out of the option
+        println!("Processing value: {}", no_clone.value);
+        retry_option = process_value(no_clone); // Process and potentially get a new option
 
         if retry_option.is_some() {
-            println!("Failed to process, retrying with incremented value...");
+            println!("Failed to process, retrying ...");
         }
     }
 
